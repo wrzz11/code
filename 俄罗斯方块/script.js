@@ -22,6 +22,9 @@ let lines = 0;
 let dropInterval = 1000; // 初始下落间隔（毫秒）
 let lastDropTime = 0;
 
+// 排行榜元素
+const leaderboardList = document.getElementById('leaderboard-list');
+
 // 方块形状
 const SHAPES = [
     // I
@@ -237,7 +240,69 @@ function updateScore() {
 // 游戏结束
 function gameOver() {
     gameRunning = false;
+    
+    // 将分数添加到排行榜
+    addScoreToLeaderboard(score);
+    
     alert(`游戏结束！\n最终分数: ${score}\n等级: ${level}\n清除行数: ${lines}`);
+}
+
+// 从localStorage加载排行榜
+function loadLeaderboard() {
+    const leaderboard = localStorage.getItem('tetris-leaderboard');
+    if (leaderboard) {
+        return JSON.parse(leaderboard);
+    }
+    return [];
+}
+
+// 保存排行榜到localStorage
+function saveLeaderboard(scores) {
+    localStorage.setItem('tetris-leaderboard', JSON.stringify(scores));
+}
+
+// 添加分数到排行榜
+function addScoreToLeaderboard(newScore) {
+    const scores = loadLeaderboard();
+    
+    // 添加新分数
+    scores.push(newScore);
+    
+    // 按分数降序排序
+    scores.sort((a, b) => b - a);
+    
+    // 只保留前10个最高分
+    if (scores.length > 10) {
+        scores.splice(10);
+    }
+    
+    // 保存更新后的排行榜
+    saveLeaderboard(scores);
+    
+    // 更新显示
+    updateLeaderboardDisplay();
+}
+
+// 更新排行榜显示
+function updateLeaderboardDisplay() {
+    const scores = loadLeaderboard();
+    
+    if (scores.length === 0) {
+        leaderboardList.innerHTML = '<div class="leaderboard-item">暂无记录</div>';
+        return;
+    }
+    
+    leaderboardList.innerHTML = '';
+    
+    scores.forEach((score, index) => {
+        const item = document.createElement('div');
+        item.className = 'leaderboard-item';
+        item.innerHTML = `
+            <span>${index + 1}. </span>
+            <span>${score}</span>
+        `;
+        leaderboardList.appendChild(item);
+    });
 }
 
 // 移动方块
@@ -378,3 +443,21 @@ pauseButton.addEventListener('click', togglePause);
 
 // 初始绘制
 drawBoard();
+
+// 如果排行榜为空，添加一些模拟数据用于测试
+function addMockScoresIfEmpty() {
+    const scores = loadLeaderboard();
+    if (scores.length === 0) {
+        const mockScores = [15000, 12500, 10000, 8500, 7000, 6000, 5000, 4000, 3000, 2000];
+        saveLeaderboard(mockScores);
+    }
+}
+
+// 初始化排行榜
+try {
+    addMockScoresIfEmpty();
+    updateLeaderboardDisplay();
+} catch (error) {
+    console.error('加载排行榜时出错:', error);
+    leaderboardList.innerHTML = '<div class="leaderboard-item">加载失败</div>';
+}

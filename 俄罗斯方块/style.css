@@ -125,3 +125,56 @@ button:active {
     padding: 5px 0;
     border-bottom: 1px dashed #ccc;
 }
+
+/* 排行榜样式 */
+.leaderboard-panel {
+    background-color: rgba(255, 255, 255, 0.85);
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+    text-align: left;
+    width: 200px;
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.leaderboard-panel h2 {
+    margin-top: 0;
+    color: #333;
+    font-size: 22px;
+    text-align: center;
+    border-bottom: 2px solid #fdbb2d;
+    padding-bottom: 10px;
+    font-weight: bold;
+}
+
+#leaderboard-list {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.leaderboard-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px dashed #ccc;
+    font-size: 14px;
+    color: #333;
+}
+
+.leaderboard-item:nth-child(1) {
+    color: #ffd700; /* 金色 */
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.leaderboard-item:nth-child(2) {
+    color: #c0c0c0; /* 银色 */
+    font-weight: bold;
+}
+
+.leaderboard-item:nth-child(3) {
+    color: #cd7f32; /* 铜色 */
+    font-weight: bold;
+}
